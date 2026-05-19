@@ -67,7 +67,7 @@ def patch_neighbours(x, y, x0, y0, N):
 
 
 # ===========================
-# NEIGHBOURS PATCHES
+# NEIGHBOUR PATCHES
 # ===========================
 
 @njit
@@ -136,7 +136,8 @@ def one_step_update(food_sites, food_present, forager,
         agent = forager[x, y]
         forager[x, y] = -1
 
-        # --- identify patch ---
+        #==== identify patch ====
+        
         x0 = (x // patch_size) * patch_size
         y0 = (y // patch_size) * patch_size
 
@@ -145,7 +146,7 @@ def one_step_update(food_sites, food_present, forager,
 
         nx, ny = x, y
 
-        # ================= LEAVE =================
+        #================= LEAVE =================
         if time_since_food[x, y] >= T_GUT:
 
             patch_visits_agent[agent] += 1
@@ -260,7 +261,7 @@ def run_parallel(T_GUT):
 
             # mu = N * N * p
             # disp=1
-            # p_nb = disp / (disp + mu)
+            # p_nb = disp / (disp + mu)  # same mean
             # F = np.random.negative_binomial(disp, p_nb)  # Negative Binomial distribution
 
             F = min(F, N*N)
@@ -293,7 +294,8 @@ def run_parallel(T_GUT):
         patch_visits_agent = np.zeros(num_agents)
         energy_agent = np.zeros(num_agents)
 
-        # simulate
+        #====== simulate over total time steps =====
+        
         for t in range(steps):
             one_step_update(food_sites, food_present, forager,
                             food_timer, time_since_food,
@@ -311,7 +313,7 @@ def run_parallel(T_GUT):
 
 
 # =========================================================
-# MAIN LOOP
+# Main loop for varies giving up time
 # =========================================================
 
 T_values = np.arange(1, 500, 2)
